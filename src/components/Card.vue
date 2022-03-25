@@ -1,17 +1,17 @@
 <template>
   <div>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
-    <div class="base-card -shadow m-4">
-      <div class="row">
+    <div class="base-card shadow my-4">
+      <div class="row align-items-center">
         <div class="col-md-4" >
-          <span >ID: {{obj.id}} </span><br><br><br>
-          <h1 class="title">{{obj.title}}</h1><br>
+          <span >ID: {{obj.id}} </span>
+          <h1 class="title">{{obj.title}}</h1>
           <p>{{obj.description}}</p>
-          <div>
-            <span class='bi bi-heart-fill' v-bind:style="{'color':colorH}" @click="like()"></span>
+          <div class="icon text-center">
+            <div v-html="icons.heartIcon" />
+            <span class='bi bi-heart-fill' v-bind:style="{'color':colorH}" @click="like"></span>
           </div>
         </div>
-        <div class="col-md-8" >
+        <div class="col-md-8">
           <img :src="obj.image" width="200" height="200">
         </div>
       </div>
@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import icons from "@/helpers/icons";
 export default {
   name: "Card",
   props:{
@@ -27,6 +28,7 @@ export default {
   },
   data() {
     return {
+      icons: icons,
       colorH:'white'
     }
   },
@@ -53,16 +55,21 @@ export default {
 </script>
 
 <style scoped>
+.icon{
+  width:16px;
+  margin:0 auto;
+}
 .base-card {
-  padding: 20px;
+  padding: 1em;
   margin-bottom: 24px;
   transition: all 0.2s linear;
   cursor: pointer;
-  background-color:  black  ;
-  color: white;
+  border-radius:7px;
+  /*background-color:  black  ;*/
+  /*color: white;*/
 }
 .base-card:hover {
-  transform: scale(1.1);
+  transform: scale(1.03);
   box-shadow: 0 3px 12px 0 rgba(0, 0, 0, 0.2), 0 1px 15px 0 rgba(0, 0, 0, 0.19);
 }
 </style>

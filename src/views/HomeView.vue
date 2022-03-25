@@ -20,11 +20,14 @@
     </div>
     <br><br>
     <h2>Welcome! </h2>
-    <div class="row g-2 p-5">
+    <div class="row g-2 p-4">
       <div class="col-md">
-        <div class="form-floating">
-          <input type="search" v-model="text" class="form-control" id="inputSearch" @keypress="getFromImdb({ text })" @keyup.enter="searching=true; typing=false" @click="typing=true;">
-          <label for="inputSearch">Search</label>
+        <div>
+          <b-form-input type="search" v-model="text" class="form-control" id="inputSearch"
+                        placeholder="Start typing a title..."
+                        @keypress="getFromImdb({ text })"
+                        @keyup.enter="searching=true; typing=false"
+                        @click="typing=true;"/>
         </div>
         <div v-if="text.length >= 3 && typing==true" style="text-align:left; border:lightskyblue; border-width:2px; border-style:solid;">
           <div v-for="obj in objs">
@@ -33,16 +36,15 @@
         </div>
       </div>
       <div class="col-md">
-        <div class="form-floating">
-          <select class="form-select" id="selectCategory">
-            <option value="0" selected>Both Movies & Series</option>
-            <option value="1">Movies Only</option>
-            <option value="2">Series Only</option>
-          </select>
-          <label for="selectCategory">Select below</label>
+        <div>
+            <b-form-select  class="form-select" id="selectCategory" v-model="params.category">
+              <b-form-select-option value="0" selected>Both Movies & Series</b-form-select-option>
+              <b-form-select-option value="1">Movies Only</b-form-select-option>
+              <b-form-select-option value="2">Series Only</b-form-select-option>
+            </b-form-select>
         </div>
       </div>
-      <div v-if = "searching == true">
+      <div v-if="searching == true">
         <div v-if="objs.length">
           <Card v-for="obj in objs" :obj="obj"></Card>
         </div>
@@ -69,18 +71,21 @@ export default {
       typing: true,
       objs: [],
       url: '',
+      params:{
+        category: 0
+      },
+      optionUrls: {
+        0: 'SearchTitle',
+        1: 'SearchMovie',
+        2: 'SearchSeries'
+      },
+      apiKey: process.env.VUE_APP_API_KEY
     }
   },
   methods: {
     getFromImdb(txt) {
-      let option = document.getElementById("selectCategory").selectedIndex;
-      if (option === 0) {
-        this.url= "https://imdb-api.com/en/API/SearchTitle/k_hfw9n9oo";
-      } else if (option === 1) {
-        this.url= "https://imdb-api.com/en/API/SearchMovie/k_hfw9n9oo";
-      } else {
-        this.url= "https://imdb-api.com/en/API/SearchSeries/k_hfw9n9oo";
-      }
+      this.url= `https://imdb-api.com/en/API/${this.optionUrls[this.params.category]}/${this.apiKey}`;
+
       this.url=[this.url,Object.values(txt)].join('/');
       console.log('Searching for this url: '+ this.url);
       axios.get(this.url).then(response => {
